@@ -51,47 +51,46 @@ Tujuan proyek ini dirancang untuk menjawab pernyataan masalah di atas, yaitu:
 
 Dataset yang digunakan pada proyek ini adalah **dataset rating film MovieLens**, yang berisi interaksi antara pengguna dan film dalam bentuk rating eksplisit. Dataset ini banyak digunakan dalam penelitian dan pengembangan sistem rekomendasi karena merepresentasikan skenario dunia nyata dengan karakteristik data yang *sparse* dan beragam preferensi pengguna.
 
-Secara umum, dataset terdiri dari **data interaksi user–item** berupa pemberian rating film oleh pengguna. Setiap baris data merepresentasikan satu interaksi, yaitu seorang pengguna memberikan rating tertentu terhadap sebuah film. Pada projek ini digunakan 2 dataset MovieLens, yaitu *ratings.csv* dan *movies.csv*. Berdasarkan hasil eksplorasi awal, dataset memiliki:
-- Ukuran dataset 100836 baris
-- Tidak terdapat data duplikat
-- Tidak terdapat data yang kosong
-- Jumlah pengguna yang relatif lebih sedikit dibandingkan jumlah film (userId: 610 | movieId: 9719)
-- Tingkat **sparsity yang sangat tinggi (±98%)**, yang berarti sebagian besar pasangan user–movie tidak memiliki interaksi
-
-Dataset ini dapat diunduh secara bebas melalui situs resmi GroupLens:
-- https://grouplens.org/datasets/movielens/
-  
-Atau seperti yang digunakan pada project kali ini yang tersedia di kaggle:
+### Sumber Dataset:
+Dataset yang digunakan berasal dari platform kaggle.
 - https://www.kaggle.com/datasets/grouplens/movielens-latest-small
 
-Pada proyek ini, data difokuskan pada file rating yang berisi informasi utama untuk membangun sistem rekomendasi berbasis *collaborative filtering*.
+### Jumlah baris, kolom, dan kondisi data
+Pada proyek ini, data difokuskan pada file rating yang berisi informasi utama untuk membangun sistem rekomendasi berbasis *collaborative filtering*. Dataset yang digunakan yaitu, **ratings.csv** dan **movies.csv**.
+Masing-masing dataset memiliki:
+1. ratings.csv
+   - Jumlah baris dan kolom, yaitu (100836 baris, 4 kolom)
+   - Tidak terdapat missing value
+   - Tidak terdapat data duplikat
+  
+2. movies.csv
+   - Jumlah baris dan kolom, yaitu (100836 baris, 3 kolom)
+   - Tidak terdapat missing value
+   - Tidak terdapat data duplikat
 
 ### Deskripsi Variabel
 
 Berikut adalah penjelasan setiap variabel yang digunakan dalam dataset yang digunakan:
 
-1. ratings.csv
-   - **userId**  
-     Merupakan identitas unik pengguna yang memberikan rating terhadap film. Variabel ini digunakan untuk merepresentasikan entitas pengguna dalam sistem rekomendasi.
-   
-   - **movieId**  
-     Merupakan identitas unik film yang diberi rating oleh pengguna. Variabel ini merepresentasikan item yang akan direkomendasikan.
-   
-   - **rating**  
-     Nilai numerik yang diberikan pengguna terhadap film tertentu. Rating bersifat eksplisit dan mencerminkan tingkat preferensi pengguna. Dalam dataset MovieLens, rating umumnya berada pada rentang 0.5 hingga 5.0.
-   
-   - **timestamp**  
-     Menunjukkan waktu ketika rating diberikan. Pada proyek ini, variabel timestamp tidak digunakan secara langsung dalam pemodelan, namun dapat dimanfaatkan untuk analisis temporal pada pengembangan lanjutan.
+### 1. ratings.csv
 
-2. movies.csv
-   - **movieId**  
-     Merupakan identitas unik film yang diberi rating oleh pengguna. Variabel ini merepresentasikan item yang akan direkomendasikan.
+| Nama Kolom | Deskripsi | Tipe Data |
+|------------|-----------|-----------|
+| **userId** | Merupakan identitas unik pengguna yang memberikan rating terhadap film. Variabel ini digunakan untuk merepresentasikan entitas pengguna dalam sistem rekomendasi. | int |
+| **movieId** | Merupakan identitas unik film yang diberi rating oleh pengguna. Variabel ini merepresentasikan item yang akan direkomendasikan. | int |
+| **rating** | Nilai numerik yang diberikan pengguna terhadap film tertentu. Rating bersifat eksplisit dan mencerminkan tingkat preferensi pengguna. Dalam dataset MovieLens, rating umumnya berada pada rentang 0.5 hingga 5.0. | float |
+| **timestamp** | Menunjukkan waktu ketika rating diberikan. Pada proyek ini, variabel timestamp tidak digunakan secara langsung dalam pemodelan, namun dapat dimanfaatkan untuk analisis temporal pada pengembangan lanjutan. | int |
 
-   - **title**  
-     Judul dari setiap film yang terdapat pada dataset.
+---
 
-   - **genres**  
-     Berisi gabungan genre dari setiap film pada dataset.
+### 2. movies.csv
+
+| Nama Kolom | Deskripsi | Tipe Data |
+|------------|-----------|-----------|
+| **movieId** | Merupakan identitas unik film yang diberi rating oleh pengguna. Variabel ini merepresentasikan item yang akan direkomendasikan. | int |
+| **title** | Judul dari setiap film yang terdapat pada dataset. | object |
+| **genres** | Berisi gabungan genre dari setiap film pada dataset. | object |
+
 
 ### Tahapan Awal Pemahaman Data (Exploratory Data Analysis)
 
@@ -241,9 +240,11 @@ di mana:
 
 Model dilatih menggunakan:
 - **Optimizer**: Adam
-- **Learning Rate**: disesuaikan secara dinamis menggunakan *ReduceLROnPlateau*
-- **Loss Function**: Binary Crossentropy (pada rating yang dinormalisasi)
-- **Regularization**: L2 regularization pada embedding untuk mengurangi overfitting
+- **Learning Rate**: 0.001 (dengan ReduceLROnPlateau)
+- **Loss Function**: Mean Squared Error (MSE)
+- **Evaluation Metric**: Root Mean Squared Error (RMSE)
+- **Regularization**: L2 regularization pada embedding
+
 
 Training dilakukan menggunakan *mini-batch gradient descent* dengan pipeline `tf.data.Dataset` untuk efisiensi komputasi. Selain itu, digunakan *Early Stopping* untuk menghentikan training ketika performa validasi tidak lagi meningkat.
 
@@ -259,6 +260,21 @@ Setelah model terlatih, sistem digunakan untuk menghasilkan **Top-N Recommendati
 4. Mengambil **Top-N film** dengan skor tertinggi sebagai rekomendasi.
 
 Output Top-N recommendation ini merepresentasikan daftar film yang paling relevan untuk pengguna tertentu berdasarkan pola preferensi yang dipelajari oleh model.
+
+*Sampel hasil output rekomendasi berdasarkan user_id = 203*
+| movieId | title | pred_score |
+|---------|-------|------------|
+| 246 | Hoop Dreams (1994) | 4.574862 |
+| 1198 | Raiders of the Lost Ark (Indiana Jones and the...) | 4.556180 |
+| 4973 | Amelie (Fabuleux destin d'Amélie Poulain, Le) ... | 4.502178 |
+| 50 | Usual Suspects, The (1995) | 4.498779 |
+| 356 | Forrest Gump (1994) | 4.494165 |
+| 4011 | Snatch (2000) | 4.438409 |
+| 475 | In the Name of the Father (1993) | 4.437773 |
+| 177593 | Three Billboards Outside Ebbing, Missouri (2017) | 4.435908 |
+| 58 | Postman, The (Postino, Il) (1994) | 4.433905 |
+| 58559 | Dark Knight, The (2008) | 4.418793 |
+
 
 ---
 
@@ -369,7 +385,7 @@ Berdasarkan proses evaluasi terhadap data validasi, diperoleh hasil sebagai beri
 
 - **Precision@K**: 0.0482  
 - **Recall@K**: 0.0408  
-- **HitRate@K**: 0.3265  
+- **HitRate@K**: 0.3465  
 - **NDCG@K**: 0.0563  
 
 ---
@@ -380,7 +396,7 @@ Berdasarkan proses evaluasi terhadap data validasi, diperoleh hasil sebagai beri
   
 - **Recall@K** yang rendah mengindikasikan bahwa tidak semua film relevan berhasil direkomendasikan, terutama karena jumlah item relevan per pengguna relatif sedikit.
 
-- **HitRate@K** yang cukup tinggi (±32%) menunjukkan bahwa dalam banyak kasus, sistem berhasil merekomendasikan setidaknya satu film relevan kepada pengguna. Dari sudut pandang pengalaman pengguna, hal ini merupakan indikasi yang positif.
+- **HitRate@K** yang cukup tinggi (±34%) menunjukkan bahwa dalam banyak kasus, sistem berhasil merekomendasikan setidaknya satu film relevan kepada pengguna. Dari sudut pandang pengalaman pengguna, hal ini merupakan indikasi yang positif.
 
 - **NDCG@K** yang rendah namun konsisten dengan Precision dan Recall menunjukkan bahwa meskipun item relevan berhasil direkomendasikan, posisinya belum selalu berada di peringkat teratas.
 
