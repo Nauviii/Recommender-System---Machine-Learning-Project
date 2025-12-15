@@ -64,7 +64,7 @@ Masing-masing dataset memiliki:
    - Tidak terdapat data duplikat
   
 2. movies.csv
-   - Jumlah baris dan kolom, yaitu (100836 baris, 3 kolom)
+   - Jumlah baris dan kolom, yaitu (9742  baris, 3 kolom)
    - Tidak terdapat missing value
    - Tidak terdapat data duplikat
 
@@ -261,7 +261,23 @@ Setelah model terlatih, sistem digunakan untuk menghasilkan **Top-N Recommendati
 
 Output Top-N recommendation ini merepresentasikan daftar film yang paling relevan untuk pengguna tertentu berdasarkan pola preferensi yang dipelajari oleh model.
 
-*Sampel hasil output rekomendasi berdasarkan user_id = 203*
+*Sampel input film yang disukai oleh user_id = 203*
+| movieId | title | rating |
+|---------|-------|--------|
+| 5418 | Bourne Identity, The (2002) | 5.0 |
+| 1584 | Contact (1997) | 5.0 |
+| 54736 | Kingdom, The (2007) | 5.0 |
+| 5952 | Lord of the Rings: The Two Towers, The (2002) | 5.0 |
+| 4993 | Lord of the Rings: The Fellowship of the Ring,... | 5.0 |
+| 98809 | Hobbit: An Unexpected Journey, The (2012) | 5.0 |
+| 590 | Dances with Wolves (1990) | 5.0 |
+| 7153 | Lord of the Rings: The Return of the King, The... | 5.0 |
+| 296 | Pulp Fiction (1994) | 5.0 |
+| 8665 | Bourne Supremacy, The (2004) | 5.0 |
+
+
+
+*Sampel hasil output film rekomendasi berdasarkan user_id = 203, top-10 film rekomendasi yang belum ditonton oleh user*
 | movieId | title | pred_score |
 |---------|-------|------------|
 | 246 | Hoop Dreams (1994) | 4.574862 |
