@@ -51,8 +51,8 @@ Tujuan proyek ini dirancang untuk menjawab pernyataan masalah di atas, yaitu:
 
 Dataset yang digunakan pada proyek ini adalah **dataset rating film MovieLens**, yang berisi interaksi antara pengguna dan film dalam bentuk rating eksplisit. Dataset ini banyak digunakan dalam penelitian dan pengembangan sistem rekomendasi karena merepresentasikan skenario dunia nyata dengan karakteristik data yang *sparse* dan beragam preferensi pengguna.
 
-Secara umum, dataset terdiri dari **data interaksi user–item** berupa pemberian rating film oleh pengguna. Setiap baris data merepresentasikan satu interaksi, yaitu seorang pengguna memberikan rating tertentu terhadap sebuah film. Berdasarkan hasil eksplorasi awal, dataset memiliki:
-- Ukuran dataset 100836 data
+Secara umum, dataset terdiri dari **data interaksi user–item** berupa pemberian rating film oleh pengguna. Setiap baris data merepresentasikan satu interaksi, yaitu seorang pengguna memberikan rating tertentu terhadap sebuah film. Pada projek ini digunakan 2 dataset MovieLens, yaitu *ratings.csv* dan *movies.csv*. Berdasarkan hasil eksplorasi awal, dataset memiliki:
+- Ukuran dataset 100836 baris
 - Tidak terdapat data duplikat
 - Tidak terdapat data yang kosong
 - Jumlah pengguna yang relatif lebih sedikit dibandingkan jumlah film (userId: 610 | movieId: 9719)
@@ -68,19 +68,30 @@ Pada proyek ini, data difokuskan pada file rating yang berisi informasi utama un
 
 ### Deskripsi Variabel
 
-Berikut adalah penjelasan setiap variabel yang digunakan dalam dataset:
+Berikut adalah penjelasan setiap variabel yang digunakan dalam dataset yang digunakan:
 
-- **userId**  
-  Merupakan identitas unik pengguna yang memberikan rating terhadap film. Variabel ini digunakan untuk merepresentasikan entitas pengguna dalam sistem rekomendasi.
+1. ratings.csv
+   - **userId**  
+     Merupakan identitas unik pengguna yang memberikan rating terhadap film. Variabel ini digunakan untuk merepresentasikan entitas pengguna dalam sistem rekomendasi.
+   
+   - **movieId**  
+     Merupakan identitas unik film yang diberi rating oleh pengguna. Variabel ini merepresentasikan item yang akan direkomendasikan.
+   
+   - **rating**  
+     Nilai numerik yang diberikan pengguna terhadap film tertentu. Rating bersifat eksplisit dan mencerminkan tingkat preferensi pengguna. Dalam dataset MovieLens, rating umumnya berada pada rentang 0.5 hingga 5.0.
+   
+   - **timestamp**  
+     Menunjukkan waktu ketika rating diberikan. Pada proyek ini, variabel timestamp tidak digunakan secara langsung dalam pemodelan, namun dapat dimanfaatkan untuk analisis temporal pada pengembangan lanjutan.
 
-- **movieId**  
-  Merupakan identitas unik film yang diberi rating oleh pengguna. Variabel ini merepresentasikan item yang akan direkomendasikan.
+2. movies.csv
+   - **movieId**  
+     Merupakan identitas unik film yang diberi rating oleh pengguna. Variabel ini merepresentasikan item yang akan direkomendasikan.
 
-- **rating**  
-  Nilai numerik yang diberikan pengguna terhadap film tertentu. Rating bersifat eksplisit dan mencerminkan tingkat preferensi pengguna. Dalam dataset MovieLens, rating umumnya berada pada rentang 0.5 hingga 5.0.
+   - **title**  
+     Judul dari setiap film yang terdapat pada dataset.
 
-- **timestamp**  
-  Menunjukkan waktu ketika rating diberikan. Pada proyek ini, variabel timestamp tidak digunakan secara langsung dalam pemodelan, namun dapat dimanfaatkan untuk analisis temporal pada pengembangan lanjutan.
+   - **genres**  
+     Berisi gabungan genre dari setiap film pada dataset.
 
 ### Tahapan Awal Pemahaman Data (Exploratory Data Analysis)
 
@@ -356,10 +367,10 @@ NDCG@K menilai tidak hanya apakah item relevan direkomendasikan, tetapi juga apa
 
 Berdasarkan proses evaluasi terhadap data validasi, diperoleh hasil sebagai berikut:
 
-- **Precision@K**: 0.0479  
-- **Recall@K**: 0.0383  
-- **HitRate@K**: 0.3267  
-- **NDCG@K**: 0.0576  
+- **Precision@K**: 0.0482  
+- **Recall@K**: 0.0408  
+- **HitRate@K**: 0.3265  
+- **NDCG@K**: 0.0563  
 
 ---
 
